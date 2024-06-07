@@ -8,6 +8,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:pwdEx="clr-namespace:Daily.WPF.Extensions"
              mc:Ignorable="d" 
              Height="300" Width="600"
              Background="White">
@@ -28,12 +29,17 @@
         <Image Margin="10" Grid.Column="0" Source="/Images/login.png"/>
 
         <!--第一块内容 登录-->
-        <md:Transitioner Grid.Column="1" SelectedIndex="{Binding PageIndex,FallbackValue=1}" FontSize="20">
+        <!--如果不设置FallbackValue=0或者1会不显示-->
+        <md:Transitioner Grid.Column="1" SelectedIndex="{Binding PageIndex,FallbackValue=0}" FontSize="20">
             <md:TransitionerSlide>
                 <DockPanel VerticalAlignment="Center">
                     <TextBlock Text="欢迎使用" FontWeight="Bold" FontSize="30" DockPanel.Dock="Top"/>
                     <TextBox md:HintAssist.Hint="请输入账号" DockPanel.Dock="Top"/>
-                    <PasswordBox md:HintAssist.Hint="请输入密码" DockPanel.Dock="Top"/>
+                    <PasswordBox md:HintAssist.Hint="请输入密码"  DockPanel.Dock="Top">
+                        <i:Interaction.Behaviors>
+                            <pwdEx:PasswordBoxExtend PwdText="{Binding Pwd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
                     <Button Content="登录系统" Margin="5" DockPanel.Dock="Top"/>
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                         <TextBlock Text="注册账户" DockPanel.Dock="Left">
@@ -57,7 +63,7 @@
                     <PasswordBox md:HintAssist.Hint="请输入密码" DockPanel.Dock="Top"/>
                     <PasswordBox md:HintAssist.Hint="请再次输入密码" DockPanel.Dock="Top"/>
                     <Button Content="登录系统" Margin="20 5 20 5" DockPanel.Dock="Top"/>
-                    <Button Content="返回登录" Background="White" Foreground="Purple" Margin="20 0 20 5" DockPanel.Dock="Top"
+                    <Button Content="返回登录" Style="{StaticResource MaterialDesignOutlinedButton}" Margin="20 0 20 5" DockPanel.Dock="Top"
                             Command="{Binding TransitionPageCommand}" CommandParameter="A"/>
                 </DockPanel>
             </md:TransitionerSlide>

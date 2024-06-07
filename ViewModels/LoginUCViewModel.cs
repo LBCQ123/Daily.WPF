@@ -18,6 +18,18 @@ namespace Daily.WPF.ViewModels
             TransitionPageCommand = new DelegateCommand<string>(TransitionPage);
         }
 
+        private string _Pwd = "A";
+
+        public string Pwd
+        {
+            get { return _Pwd; }
+            set => SetProperty(ref _Pwd, value);
+        }
+
+
+
+
+
 
         #region 按钮事件
         private int _PageIndex = 0;
@@ -32,6 +44,7 @@ namespace Daily.WPF.ViewModels
         public DelegateCommand<string> TransitionPageCommand { get; }
         private void TransitionPage(string page)
         {
+            Pwd = Pwd + "A";
             switch(page)
             {
                 case "A":
