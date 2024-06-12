@@ -35,9 +35,10 @@
                 <DockPanel VerticalAlignment="Center">
                     <TextBlock Text="欢迎使用" FontWeight="Bold" FontSize="30" DockPanel.Dock="Top"/>
                     <TextBox md:HintAssist.Hint="请输入账号" DockPanel.Dock="Top"/>
-                    <PasswordBox md:HintAssist.Hint="请输入密码"  DockPanel.Dock="Top">
+                    <PasswordBox md:HintAssist.Hint="请输入密码" pwdEx:PasswordBoxExtend.Pwd="{Binding Pwd
+                                        ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"  DockPanel.Dock="Top">
                         <i:Interaction.Behaviors>
-                            <pwdEx:PasswordBoxExtend PwdText="{Binding Pwd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <pwdEx:PasswordBoxBehavior/>
                         </i:Interaction.Behaviors>
                     </PasswordBox>
                     <Button Content="登录系统" Margin="5" DockPanel.Dock="Top"/>
