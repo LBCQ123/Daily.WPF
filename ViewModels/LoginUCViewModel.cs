@@ -1,21 +1,29 @@
-﻿using Prism.Commands;
+﻿using Daily.WPF.HttpClients;
+using DailyApp.API.DTO;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Daily.WPF.ViewModels
 {
     public class LoginUCViewModel : BindableBase, IDialogAware
     {
-        public LoginUCViewModel()
+        private readonly HttpRestClient _client;
+
+        public LoginUCViewModel(HttpRestClient client)
         {
+            _client = client;
             TransitionPageCommand = new DelegateCommand<string>(TransitionPage);
+            RegCommand = new DelegateCommand(Reg);
         }
 
         private string _Pwd = "A";
@@ -27,7 +35,12 @@ namespace Daily.WPF.ViewModels
         }
 
 
-
+        private AccountInfoDTO _RegAccount = new AccountInfoDTO();
+        public AccountInfoDTO RegAccount
+        {
+            get { return _RegAccount; }
+            set { SetProperty(ref _RegAccount, value); }
+        }
 
 
 
@@ -55,6 +68,27 @@ namespace Daily.WPF.ViewModels
                     break;
             }
         }
+
+        public DelegateCommand RegCommand { get; }
+        private void Reg()
+        {
+            ApiRequest apiRequest = new ApiRequest();
+            apiRequest.Method = RestSharp.Method.POST;
+            apiRequest.Route = "Account/Reg";
+            apiRequest.Parameters = RegAccount;
+            var rest = _client.Execute(apiRequest);
+
+            if(rest!= null &&rest.ResultCode == 1)
+            {
+                MessageBox.Show("注册成功");
+            }
+            else
+            {
+                MessageBox.Show($"注册失败:{rest?.Msg}");
+            }
+            return;
+        }
+
 
         #endregion
 

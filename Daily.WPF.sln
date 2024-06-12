@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daily.WPF", "Daily.WPF.csproj", "{EABC81D4-8E45-468A-81A1-434C4334CF80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daily.WPF", "Daily.WPF.csproj", "{EABC81D4-8E45-468A-81A1-434C4334CF80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyApp.API", "..\DailyApp.API\DailyApp.API.csproj", "{C52FECE5-033D-45CF-A8DA-34F40018ACB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EABC81D4-8E45-468A-81A1-434C4334CF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EABC81D4-8E45-468A-81A1-434C4334CF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EABC81D4-8E45-468A-81A1-434C4334CF80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C52FECE5-033D-45CF-A8DA-34F40018ACB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C52FECE5-033D-45CF-A8DA-34F40018ACB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C52FECE5-033D-45CF-A8DA-34F40018ACB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C52FECE5-033D-45CF-A8DA-34F40018ACB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

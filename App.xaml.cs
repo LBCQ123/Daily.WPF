@@ -1,8 +1,11 @@
-﻿using Daily.WPF.ViewModels;
+﻿using Daily.WPF.HttpClients;
+using Daily.WPF.ViewModels;
 using Daily.WPF.Views;
+using DryIoc;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,6 +26,9 @@ namespace Daily.WPF
             //手动程序绑定
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterDialog<LoginUC, LoginUCViewModel>();
+            //请求
+            //containerRegistry.GetContainer().Register<RestClient>();
+            containerRegistry.GetContainer().Register<HttpRestClient>();
         }
 
         protected override Window CreateShell()
