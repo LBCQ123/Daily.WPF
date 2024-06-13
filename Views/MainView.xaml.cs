@@ -23,5 +23,17 @@ namespace Daily.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void MaxButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+            }
+        }
     }
 }

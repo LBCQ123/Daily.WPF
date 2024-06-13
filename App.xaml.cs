@@ -41,15 +41,15 @@ namespace Daily.WPF
         /// </summary>
         protected override void OnInitialized()
         {
-            var dialog = Container.Resolve<IDialogService>();
-            dialog.ShowDialog("LoginUC", callback =>
-            {
-                if (callback.Result != ButtonResult.OK /*&& callback.Result != ButtonResult.None*/)
-                {
-                    Environment.Exit(0);
-                    return;
-                }
-            });
+            //var dialog = Container.Resolve<IDialogService>();
+            //dialog.ShowDialog("LoginUC", callback =>
+            //{
+            //    if (callback.Result != ButtonResult.OK /*&& callback.Result != ButtonResult.None*/)
+            //    {
+            //        Environment.Exit(0);
+            //        return;
+            //    }
+            //});
             base.OnInitialized();
         }
     }

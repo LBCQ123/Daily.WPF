@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Daily.WPF.MsgEvents;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,25 @@ namespace Daily.WPF.Views
     /// </summary>
     public partial class LoginUC : UserControl
     {
-        public LoginUC()
+        /// <summary>
+        /// 订阅消息组件
+        /// </summary>
+        private readonly IEventAggregator _Aggregator;
+        public LoginUC(IEventAggregator eventAggregator)
         {
+            _Aggregator = eventAggregator;
             InitializeComponent();
+            _Aggregator.GetEvent<MsgEvent>().Subscribe(Sub);
         }
+
+        /// <summary>
+        /// 显示错误信息
+        /// </summary>
+        /// <param name="obj">要显示的内容</param>
+        private void Sub(string obj)
+        {
+            RegLoginBar?.MessageQueue?.Enqueue(obj);
+        }
+
     }
 }
