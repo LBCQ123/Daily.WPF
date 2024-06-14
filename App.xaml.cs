@@ -1,6 +1,8 @@
 ﻿using Daily.WPF.HttpClients;
 using Daily.WPF.ViewModels;
+using Daily.WPF.ViewModels.UCs;
 using Daily.WPF.Views;
+using Daily.WPF.Views.UCs;
 using DryIoc;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -29,6 +31,13 @@ namespace Daily.WPF
             //请求
             //containerRegistry.GetContainer().Register<RestClient>();
             containerRegistry.GetContainer().Register<HttpRestClient>();
+
+            //导航页
+            containerRegistry.RegisterForNavigation<HomeUC,HomeUCViewModel>();
+            containerRegistry.RegisterForNavigation<MemoUC,MemoUCViewModel>();
+            containerRegistry.RegisterForNavigation<SetUC,SetUCViewModel>();
+            containerRegistry.RegisterForNavigation<WaitUC,WaitUCViewModel>();
+
         }
 
         protected override Window CreateShell()

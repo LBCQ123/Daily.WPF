@@ -1,37 +1,86 @@
-﻿using Prism.Commands;
+﻿using Daily.WPF.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Daily.WPF.ViewModels
 {
     public class MainViewModel : BindableBase
     {
-		//方式1
-		private string _Title = "This is Prism program";
-		public string Title
-		{
-			get { return _Title; }
-			set => SetProperty(ref _Title, value);
-		}
+        
 
-
-        public MainViewModel()
+        public MainViewModel(IRegionManager regionManager)
         {
-            MakeSureCommand = new DelegateCommand(MakeSure);
+            _RegionManger = regionManager;
+            OnNavigationCommand = new DelegateCommand<object>(OnNavigation);
+            GoBackCommand = new DelegateCommand(GoBack);
+            GoForwordCommand = new DelegateCommand(GoForword);
+
+            LeftMenuInfos = new List<LeftMenuInfo>()
+            {
+                new LeftMenuInfo("Home","首页","HomeUC"),
+                new LeftMenuInfo("NotebookOutline","待办事项","WaitUC"),
+                new LeftMenuInfo("NotebookPlus","备忘录","MemoUC"),
+                new LeftMenuInfo("Cog","设置","SetUC")
+            };
         }
 
-        public DelegateCommand MakeSureCommand { get; }
-        private void MakeSure()
+        /// <summary>
+        /// 标题名
+        /// </summary>
+        private string _Title = "This is Prism program";
+        public string Title
         {
+            get { return _Title; }
+            set => SetProperty(ref _Title, value);
         }
+
+
+        /// <summary>
+        /// 左侧菜单的集合
+        /// </summary>
+        public List<LeftMenuInfo> LeftMenuInfos { get; set; }
+
+
+        #region 导航服务
+        private readonly IRegionManager _RegionManger;
+        private IRegionNavigationJournal? _Journal;
+        public DelegateCommand<object> OnNavigationCommand { get; }
+        private void OnNavigation(object UcName)
+        {//导航服务
+            if (UcName is LeftMenuInfo info)
+            {
+                _RegionManger.Regions["MainViewRegion"].RequestNavigate(info.ViewName, Callback =>
+                {
+                    _Journal = Callback.Context.NavigationService.Journal;
+                });
+            }
+        }
+
+        public DelegateCommand GoBackCommand { get; }
+        private void GoBack()
+        {
+            if(_Journal != null && _Journal.CanGoBack)
+            {
+                _Journal.GoBack();
+            }
+        }
+        public DelegateCommand GoForwordCommand { get; }
+        private void GoForword()
+        {
+            if(_Journal!= null&& _Journal.CanGoForward)
+            {
+                _Journal.GoForward();
+            }
+        }
+
+        #endregion
 
 
 
     }
+
+
+
 }

@@ -23,7 +23,7 @@ namespace Daily.WPF.ViewModels
         private readonly HttpRestClient _client;
 
         private readonly IEventAggregator _Aggregator;
-
+        
         public LoginUCViewModel(HttpRestClient client,IEventAggregator aggregator)
         {
             _client = client;
@@ -33,7 +33,7 @@ namespace Daily.WPF.ViewModels
             UserLoginCommand = new DelegateCommand(UserLogin);
         }
 
-        private string _Account;
+        private string _Account = string.Empty;
 
         public string Account
         {
@@ -152,7 +152,7 @@ namespace Daily.WPF.ViewModels
                 if(result.ResultData!= null && result.ResultData is JObject jobj)
                 {
                     //获取返回信息的内容
-                    var name = jobj.GetValue("name").ToString();
+                    var name = jobj.GetValue("name");
                     SendMsg($"{name}:登陆成功");
                 }
                 await Task.Delay(1000);

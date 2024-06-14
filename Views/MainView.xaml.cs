@@ -35,5 +35,10 @@ namespace Daily.WPF.Views
                 WindowState = WindowState.Maximized;
             }
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            drawerhost.IsLeftDrawerOpen = false;
+        }
     }
 }
