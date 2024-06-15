@@ -5,8 +5,122 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Daily.WPF.Views.UCs"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DesignHeight="450" d:DesignWidth="800"
+             FontFamily="微软雅黑">
+
+    <UserControl.Resources>
+        <Style TargetType="ItemsControl" x:Key="StatePanelInfoList">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" Background="Transparent"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border  Name="border" BorderThickness="2">
+                            <Border Margin="5 5 5 5" CornerRadius="5" Padding="5" Background="{Binding Color}" ClipToBounds="True">
+                                <Grid>
+                                    <StackPanel Margin="10 0">
+                                        <md:PackIcon Kind="{Binding Icon}" Width="30" Height="30"/>
+                                        <TextBlock Margin="0 5 0 5" Text="{Binding ItemName}" FontSize="14"/>
+                                        <TextBlock Margin="10 0" Text="{Binding Result}" FontSize="30" FontWeight="Bold"/>
+                                    </StackPanel>
+                                    <Canvas>
+                                        <Border Width="80" Height="80" CornerRadius="40" Background="White" Canvas.Right="-50" Opacity="0.2"/>
+                                        <Border Width="80" Height="80" CornerRadius="40" Background="White" Canvas.Bottom="-30" Canvas.Right="-20" Opacity="0.2"/>
+                                    </Canvas>
+                                </Grid>
+                            </Border>
+                        </Border>
+                        <!--触发器设置阴影-->
+                        <DataTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="10" Color="Red" BlurRadius="5" Opacity="0.3"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <!--<Setter TargetName="border" Property="BorderBrush" Value="{Binding Color}"/>
+                                <Setter Property="Cursor" Value="Hand"/>-->
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
+    
     <Grid>
-        <TextBlock Text="这是主页" FontSize="40"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!--标题-->
+        <TextBlock Grid.Row="0" Text="你好,xxx!今天是2024年-03-03 星期日" FontSize="22" Margin="15,10"/>
+        <!--第二行汇总-->
+        <ItemsControl Grid.Row="1" Margin="0 0 5 0"  ItemsSource="{Binding StatePanels}" Style="{StaticResource StatePanelInfoList}"/>
+        <!--第三行-->
+        <Grid Grid.Row="2" Margin="5 20 5 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!--第三行第一列-->
+            <Border Grid.Column="0" CornerRadius="5" Margin="5" Padding="10 0 10 0" Background="#3F3D3F">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <!--第三行第一列第一行-->
+                    <DockPanel LastChildFill="False" Grid.Row="0">
+                        <TextBlock Text="待办事项" Foreground="White" 
+                                   VerticalAlignment="Center" FontSize="20"
+                                   FontWeight="Bold" DockPanel.Dock="Left"/>
+                        <Button Content="{md:PackIcon Kind=PlusCircle, Size=36}" 
+                                Style="{StaticResource MaterialDesignIconButton}"
+                                ToolTip="添加"
+                                Foreground="#AEE800"
+                                DockPanel.Dock="Right"/>
+                    </DockPanel>
+                    
+                </Grid>
+            </Border>
+
+            <!--第三行第二列-->
+            <Border Grid.Column="1" CornerRadius="5" Margin="5" Padding="10 0 10 0" Background="#3F3D3F">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <!--第三行第一列第一行-->
+                    <DockPanel LastChildFill="False" Grid.Row="0">
+                        <TextBlock Text="备忘录" Foreground="White" 
+                                   VerticalAlignment="Center" FontSize="20"
+                                   FontWeight="Bold" DockPanel.Dock="Left"/>
+                        <Button Content="{md:PackIcon Kind=PlusCircle, Size=36}" 
+                                Style="{StaticResource MaterialDesignIconButton}"
+                                ToolTip="添加"
+                                Foreground="#AEE800"
+                                DockPanel.Dock="Right"/>
+                    </DockPanel>
+
+                </Grid>
+            </Border>
+
+        </Grid>
     </Grid>
 </UserControl>

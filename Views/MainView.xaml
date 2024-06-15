@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         Style="{StaticResource MaterialDesignWindow}"
-        Title="{Binding Title}" Height="700" Width="1200">
+        Title="{Binding Title}" Height="700" Width="1100">
 
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0"/>

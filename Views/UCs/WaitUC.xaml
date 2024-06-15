@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="This is a WaitUC" FontSize="40"/>
+        <TextBlock Text="待办事项" FontSize="40"/>
     </Grid>
 </UserControl>
