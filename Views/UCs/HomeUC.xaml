@@ -45,12 +45,11 @@
                         <DataTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Effect">
+                                    <!--设置阴影-->
                                     <Setter.Value>
-                                        <DropShadowEffect ShadowDepth="10" Color="Red" BlurRadius="5" Opacity="0.3"/>
+                                        <DropShadowEffect ShadowDepth="1" Color="#dddddd" BlurRadius="10"/>
                                     </Setter.Value>
                                 </Setter>
-                                <!--<Setter TargetName="border" Property="BorderBrush" Value="{Binding Color}"/>
-                                <Setter Property="Cursor" Value="Hand"/>-->
                             </Trigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -95,7 +94,32 @@
                                 Foreground="#AEE800"
                                 DockPanel.Dock="Right"/>
                     </DockPanel>
-                    
+
+                    <!--待办事项内容-->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding WaitInfos}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel LastChildFill="False">
+                                    <StackPanel DockPanel.Dock="Left">
+                                        <TextBlock FontSize="14" Text="{Binding Title}"
+                                                   Foreground="#FFFFFF"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock FontSize="10" Grid.Row="1"
+                                                   Foreground="#828282"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Content}"/>
+                                    </StackPanel>
+                                    <ToggleButton DockPanel.Dock="Right"
+                                                  IsChecked="{Binding Status}"
+                                                  VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </DataTemplate> 
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                 </Grid>
             </Border>
 
