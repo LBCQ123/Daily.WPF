@@ -96,30 +96,7 @@
                     </DockPanel>
 
                     <!--待办事项内容-->
-                    <ListBox Grid.Row="1" ItemsSource="{Binding WaitInfos}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <DockPanel LastChildFill="False">
-                                    <StackPanel DockPanel.Dock="Left">
-                                        <TextBlock FontSize="14" Text="{Binding Title}"
-                                                   Foreground="#FFFFFF"
-                                                   VerticalAlignment="Center"/>
-                                        <TextBlock FontSize="10" Grid.Row="1"
-                                                   Foreground="#828282"
-                                                   VerticalAlignment="Center"
-                                                   Text="{Binding Content}"/>
-                                    </StackPanel>
-                                    <ToggleButton DockPanel.Dock="Right"
-                                                  IsChecked="{Binding Status}"
-                                                  VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </DataTemplate> 
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding WaitInfos}" Style="{StaticResource WaitInfoList}"/>
                 </Grid>
             </Border>
 
@@ -141,6 +118,9 @@
                                 Foreground="#AEE800"
                                 DockPanel.Dock="Right"/>
                     </DockPanel>
+
+                    <!--备忘录事项内容-->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding MemoInfos}" Style="{StaticResource MemoInfoList}"/>
 
                 </Grid>
             </Border>
