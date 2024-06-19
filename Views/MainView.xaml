@@ -9,13 +9,13 @@
         mc:Ignorable="d"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         Style="{StaticResource MaterialDesignWindow}"
-        Title="{Binding Title}" Height="700" Width="1100">
+        Title="{Binding Title}" Height="700" Width="1100"
+        >
 
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    
     <md:DialogHost DialogTheme="Inherit" Identifier="RootDialog">
         <!--SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"-->
 
@@ -29,7 +29,7 @@
                                 <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
                             </Image.Clip>
                         </Image>
-                        <ListBox ItemsSource="{Binding LeftMenuInfos}"
+                        <ListBox x:Name="MenuList" ItemsSource="{Binding LeftMenuInfos}"
                                  SelectionChanged="ListBox_SelectionChanged"
                                  ItemContainerStyle="{StaticResource LeftMenuStyle}">
                             <i:Interaction.Triggers>
@@ -92,7 +92,7 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="22"
-                       Text="我的奋斗" />
+                       Text="我的.." />
 
                         <!--关闭-->
                         <Button DockPanel.Dock="Right" HorizontalAlignment="Right"

@@ -33,7 +33,7 @@ namespace Daily.WPF.ViewModels
             UserLoginCommand = new DelegateCommand(UserLogin);
         }
 
-        private string _Account = string.Empty;
+        private string _Account = "aaa";
 
         public string Account
         {
@@ -43,7 +43,7 @@ namespace Daily.WPF.ViewModels
 
 
 
-        private string _Pwd = string.Empty;
+        private string _Pwd = "123";
 
         public string Pwd
         {
@@ -148,20 +148,26 @@ namespace Daily.WPF.ViewModels
             var result = _client.Execute(apiRequest);
             if(result != null && result.ResultCode == 1)
             {
-                
+                DialogParameters keyValues = new DialogParameters();
                 if(result.ResultData!= null && result.ResultData is JObject jobj)
                 {
                     //获取返回信息的内容
-                    var name = jobj.GetValue("name");
+                    JToken name = jobj.GetValue("name")!;
+                    keyValues.Add("LoginUserName", name.ToString());
                     SendMsg($"{name}:登陆成功");
+                }
+                else
+                {
+                    SendMsg("系统繁忙，请稍后再试");
+                    return;
                 }
                 await Task.Delay(1000);
                 //关闭界面
-                RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+                RequestClose?.Invoke(new DialogResult(ButtonResult.OK,keyValues));
             }
             else
             {
-                SendMsg(result.Msg);
+                SendMsg(result!.Msg);
             }
 
         }

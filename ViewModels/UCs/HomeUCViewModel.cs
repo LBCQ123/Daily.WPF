@@ -1,11 +1,13 @@
 ﻿using Daily.WPF.DTO;
 using Daily.WPF.Models;
 using Prism.Mvvm;
+using Prism.Regions;
+using System;
 using System.Collections.Generic;
 
 namespace Daily.WPF.ViewModels.UCs
 {
-    public class HomeUCViewModel : BindableBase
+    public class HomeUCViewModel : BindableBase , INavigationAware
     {
         public HomeUCViewModel()
         {
@@ -30,6 +32,34 @@ namespace Daily.WPF.ViewModels.UCs
             };
 
         }
+
+        #region 面板显示数据
+        /// <summary>
+        /// 登录用户名
+        /// </summary>
+        private string _LoginUserName = "未登录";
+
+        public string LoginUserName
+        {
+            get { return _LoginUserName; }
+            set => SetProperty(ref _LoginUserName, value);
+        }
+
+        private DateTime _CurrentTime = DateTime.Now;
+
+        public DateTime CurrentTime
+        {
+            get { return _CurrentTime; }
+            set => SetProperty(ref _CurrentTime, value);
+        }
+
+
+
+
+
+        #endregion
+
+
 
         /// <summary>
         /// 统计面板数据
@@ -65,8 +95,25 @@ namespace Daily.WPF.ViewModels.UCs
             set => SetProperty(ref _MemoInfos, value);
         }
 
+        #region INavigationAware
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if(navigationContext.Parameters.ContainsKey("LoginUserName") == true)
+            {
+                LoginUserName = navigationContext.Parameters.GetValue<string>("LoginUserName");
+            }
+            CurrentTime = DateTime.Now;
+        }
 
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
 
-
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
+        #endregion
     }
 }

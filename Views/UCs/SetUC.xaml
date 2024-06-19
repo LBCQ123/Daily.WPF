@@ -5,8 +5,54 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Daily.WPF.Views.UCs"
              mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             FontFamily="微软雅黑"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="这是设置" FontSize="40"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--标题-->
+        <TextBlock Grid.Row="0" Text="设置" FontSize="26" Margin="20,10"/>
+
+        <!--分割线-->
+        <Border Grid.Row="1" BorderBrush="#dddddd" BorderThickness="0.5"/>
+        <!--正文-->
+        <Grid Grid.Row="2" Margin="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--选择菜单-->
+            <ListBox ItemsSource="{Binding LeftMenuInfos}"
+                                 ItemContainerStyle="{StaticResource LeftMenuStyle}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged" >
+                        <i:InvokeCommandAction Command="{Binding OnNavigationCommand}"
+                                        CommandParameter="{Binding SelectedItem,
+                                        RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <!--模板内显示md专用图标-->
+                            <md:PackIcon Kind="{Binding Icon}" FontSize="24"
+                                          Margin="10 0 10 0"      VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding MenuName}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+            <!--内容-->
+            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="SettingRegion"/>
+
+        </Grid>
     </Grid>
 </UserControl>

@@ -4,6 +4,7 @@ using Daily.WPF.ViewModels.UCs;
 using Daily.WPF.Views;
 using Daily.WPF.Views.UCs;
 using DryIoc;
+using Prism.Commands;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
@@ -33,10 +34,13 @@ namespace Daily.WPF
             containerRegistry.GetContainer().Register<HttpRestClient>();
 
             //导航页
-            containerRegistry.RegisterForNavigation<HomeUC,HomeUCViewModel>();
-            containerRegistry.RegisterForNavigation<MemoUC,MemoUCViewModel>();
-            containerRegistry.RegisterForNavigation<SetUC,SetUCViewModel>();
-            containerRegistry.RegisterForNavigation<WaitUC,WaitUCViewModel>();
+            containerRegistry.RegisterForNavigation<HomeUC,HomeUCViewModel>();//首页
+            containerRegistry.RegisterForNavigation<MemoUC,MemoUCViewModel>();//备忘录
+            containerRegistry.RegisterForNavigation<SetUC,SetUCViewModel>();//设置
+            containerRegistry.RegisterForNavigation<WaitUC,WaitUCViewModel>();//待办事项
+            containerRegistry.RegisterForNavigation<PersonalUC, PersonalUCViewModel>();//个性化页面
+            containerRegistry.RegisterForNavigation<SysSetUC, SysSetUCViewModel>();//系统设置页面
+            containerRegistry.RegisterForNavigation<AboutUsUC, AboutUsUCViewModel>();//关于更多页
 
         }
 
@@ -50,15 +54,20 @@ namespace Daily.WPF
         /// </summary>
         protected override void OnInitialized()
         {
-            //var dialog = Container.Resolve<IDialogService>();
-            //dialog.ShowDialog("LoginUC", callback =>
-            //{
-            //    if (callback.Result != ButtonResult.OK /*&& callback.Result != ButtonResult.None*/)
-            //    {
-            //        Environment.Exit(0);
-            //        return;
-            //    }
-            //});
+            var dialog = Container.Resolve<IDialogService>();
+            dialog.ShowDialog("LoginUC", callback =>
+            {
+                if (callback.Result != ButtonResult.OK /*&& callback.Result != ButtonResult.None*/)
+                {
+                    Environment.Exit(0);
+                    return;
+                }
+                if (App.Current.MainWindow.DataContext is MainViewModel viewModel)
+                {
+                    string Name = callback.Parameters.GetValue<string>("LoginUserName");
+                    viewModel.SetDefaultUC(Name);
+                }
+            });
             base.OnInitialized();
         }
     }

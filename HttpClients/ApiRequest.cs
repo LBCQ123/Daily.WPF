@@ -16,7 +16,7 @@ namespace Daily.WPF.HttpClients
         /// <summary>
         /// 请求地址/api路由地址
         /// </summary>
-        public string Route { get; set; }
+        public string Route { get; set; } = string.Empty;
 
         /// <summary>
         /// 请求方式(get/post/delete/put)

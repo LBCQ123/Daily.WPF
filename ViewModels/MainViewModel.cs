@@ -26,6 +26,7 @@ namespace Daily.WPF.ViewModels
             };
         }
 
+        #region 基础信息
         /// <summary>
         /// 标题名
         /// </summary>
@@ -35,6 +36,8 @@ namespace Daily.WPF.ViewModels
             get { return _Title; }
             set => SetProperty(ref _Title, value);
         }
+
+        #endregion
 
 
         /// <summary>
@@ -78,6 +81,20 @@ namespace Daily.WPF.ViewModels
         #endregion
 
 
+        #region 默认初始化，设置默认导航
+
+        public void SetDefaultUC(string loginUserName)
+        {
+            NavigationParameters keyValuePairs = new NavigationParameters();
+            keyValuePairs.Add("LoginUserName", loginUserName);
+            _RegionManger.Regions["MainViewRegion"].RequestNavigate("HomeUC", Callback =>
+            {
+                _Journal = Callback.Context.NavigationService.Journal;
+            }, keyValuePairs);
+        }
+
+
+        #endregion
 
     }
 

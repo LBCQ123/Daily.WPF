@@ -8,11 +8,11 @@
         /// <summary>
         /// 姓名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string Account { get; set; }
+        public string Account { get; set; } = string.Empty;
 
-        public string Pwd { get; set; }
+        public string Pwd { get; set; } = string.Empty;
 
     }
 }

@@ -6,10 +6,12 @@
              xmlns:local="clr-namespace:Daily.WPF.Views.UCs"
              mc:Ignorable="d" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:convert="clr-namespace:Daily.WPF.Converters"
              d:DesignHeight="450" d:DesignWidth="800"
              FontFamily="微软雅黑">
 
     <UserControl.Resources>
+        <convert:DateTimeToStringConverter x:Key="DateTimeConvert"/>
         <Style TargetType="ItemsControl" x:Key="StatePanelInfoList">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -65,8 +67,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <!--标题-->
-        <TextBlock Grid.Row="0" Text="你好,xxx!今天是2024年-03-03 星期日" FontSize="22" Margin="15,10"/>
+        <!--标题 Text="你好,xxx!今天是2024年-03-03 星期日"-->
+        <TextBlock Grid.Row="0"  FontSize="22" Margin="15,10">
+            <Run Text="你好,"/>
+            <Run Text="{Binding LoginUserName}"/>
+            <Run Text="!今天是"/>
+            <Run Text="{Binding CurrentTime,Converter={StaticResource DateTimeConvert}}"/>
+        </TextBlock>
         <!--第二行汇总-->
         <ItemsControl Grid.Row="1" Margin="0 0 5 0"  ItemsSource="{Binding StatePanels}" Style="{StaticResource StatePanelInfoList}"/>
         <!--第三行-->
