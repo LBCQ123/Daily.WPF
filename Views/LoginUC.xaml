@@ -21,7 +21,7 @@
         </Style>
     </prism:Dialog.WindowStyle>
 
-    <Grid Margin="10" >
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition Width="1*"/>

@@ -99,6 +99,7 @@
                                 Style="{StaticResource MaterialDesignIconButton}"
                                 ToolTip="添加"
                                 Foreground="#AEE800"
+                                Command="{Binding AddWaitInfoCommand}"
                                 DockPanel.Dock="Right"/>
                     </DockPanel>
 
