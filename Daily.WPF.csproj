@@ -32,4 +32,10 @@
     <Resource Include="Images\wind.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Views\Dialogs\EditWaitUC.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

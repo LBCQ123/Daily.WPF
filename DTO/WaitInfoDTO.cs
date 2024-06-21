@@ -27,6 +27,7 @@ namespace Daily.WPF.DTO
 
         /// <summary>
         /// 状态
+        /// 0-待办；1-已完成
         /// </summary>
         public int Status { get; set; }
 

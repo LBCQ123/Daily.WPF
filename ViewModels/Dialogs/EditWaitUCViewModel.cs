@@ -13,9 +13,9 @@ using System.Windows;
 
 namespace Daily.WPF.ViewModels.Dialogs
 {
-    public class AddWaitUCViewModel :BindableBase, IDialogHostAware
+    public class EditWaitUCViewModel :BindableBase, IDialogHostAware
     {
-        public AddWaitUCViewModel()
+        public EditWaitUCViewModel()
         {
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
@@ -76,7 +76,13 @@ namespace Daily.WPF.ViewModels.Dialogs
         /// <param name="parameters"></param>
         public void OnDialogOpening(IDialogParameters parameters)
         {
-            
+            if(parameters.TryGetValue<WaitInfoDTO>("WaitInfoDTO",out WaitInfoDTO? waitInfo))
+            {
+                if(waitInfo != null)
+                {
+                    WaitInfoDTO = waitInfo;
+                }
+            }
         }
 
 

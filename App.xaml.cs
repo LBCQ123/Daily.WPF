@@ -1,4 +1,5 @@
 ﻿using Daily.WPF.HttpClients;
+using Daily.WPF.Services;
 using Daily.WPF.ViewModels;
 using Daily.WPF.ViewModels.Dialogs;
 using Daily.WPF.ViewModels.UCs;
@@ -45,7 +46,11 @@ namespace Daily.WPF
             containerRegistry.RegisterForNavigation<AboutUsUC, AboutUsUCViewModel>();//关于更多页
 
             //Dialog
-            containerRegistry.RegisterDialog<AddWaitUC, AddWaitUCViewModel>();
+            containerRegistry.RegisterForNavigation<AddWaitUC, AddWaitUCViewModel>();
+            containerRegistry.RegisterForNavigation<EditWaitUC, EditWaitUCViewModel>();
+
+            //添加自定义的窗口注入服务
+            containerRegistry.Register<DialogHostService>();
 
         }
 

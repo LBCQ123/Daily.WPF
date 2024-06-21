@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Daily.WPF.Views.UCs"
              mc:Ignorable="d" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:convert="clr-namespace:Daily.WPF.Converters"
              d:DesignHeight="450" d:DesignWidth="800"
              FontFamily="微软雅黑">
@@ -103,8 +104,15 @@
                                 DockPanel.Dock="Right"/>
                     </DockPanel>
 
-                    <!--待办事项内容-->
-                    <ListBox Grid.Row="1" ItemsSource="{Binding WaitInfos}" Style="{StaticResource WaitInfoList}"/>
+                    <!--待办事项内容 MouseDoubleClick-->
+                    <ListBox Grid.Row="1" ItemsSource="{Binding WaitInfos}" Style="{StaticResource WaitInfoList}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ChangeWaitCommand}" CommandParameter="{Binding SelectedItem,
+                                    RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListBox>
                 </Grid>
             </Border>
 

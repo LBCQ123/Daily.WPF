@@ -21,7 +21,10 @@
                         </StackPanel>
                         <ToggleButton DockPanel.Dock="Right"
                                                   IsChecked="{Binding Status}"
-                                                  VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"
+                                                  Command="{Binding DataContext.ChangeWaitStatusCommand,
+                                                    RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListBox}}"
+                                                  CommandParameter="{Binding}"/>
                     </DockPanel>
                 </DataTemplate>
             </Setter.Value>

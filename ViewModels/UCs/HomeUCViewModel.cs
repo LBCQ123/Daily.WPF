@@ -1,6 +1,7 @@
 ﻿using Daily.WPF.DTO;
 using Daily.WPF.HttpClients;
 using Daily.WPF.Models;
+using Daily.WPF.Services;
 using DailyApp.API.DTO;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -15,12 +16,14 @@ namespace Daily.WPF.ViewModels.UCs
 {
     public class HomeUCViewModel : BindableBase, INavigationAware
     {
-        public HomeUCViewModel(HttpRestClient httpRestClient, IDialogService dialogService)
+        public HomeUCViewModel(HttpRestClient httpRestClient, DialogHostService dialogService)
         {
             this._Client = httpRestClient;
             this._DialogService = dialogService;
 
             AddWaitInfoCommand = new DelegateCommand(AddWaitInfo);
+            ChangeWaitStatusCommand = new DelegateCommand<WaitInfoDTO>(ChangeWaitStatus);
+            ChangeWaitCommand = new DelegateCommand<WaitInfoDTO>(ChangeWait);
 
             _StatePanels = new List<StatePanelInfo>()
             {
@@ -30,10 +33,10 @@ namespace Daily.WPF.ViewModels.UCs
                 new StatePanelInfo("PlaylistStar","备忘录","20","#FFFFA000","MemoUC"),
             };
 
-            _WaitInfos = new List<WaitInfoDTO>()
+            _WaitInfos = new List<DTO.WaitInfoDTO>()
             {
-                new WaitInfoDTO(0,"测试录屏","仔细给客户演示测试",0),
-                new WaitInfoDTO(1,"上传录屏","上传录屏，上传时，仔细检查是否有效果录屏等",1)
+                new DTO.WaitInfoDTO(0,"测试录屏","仔细给客户演示测试",0),
+                new DTO.WaitInfoDTO(1,"上传录屏","上传录屏，上传时，仔细检查是否有效果录屏等",1)
             };
 
             _MemoInfos = new List<MemoInfoDTO>()
@@ -99,9 +102,9 @@ namespace Daily.WPF.ViewModels.UCs
         /// <summary>
         /// 待办事项列表
         /// </summary>
-        private List<WaitInfoDTO> _WaitInfos;
+        private List<DTO.WaitInfoDTO> _WaitInfos;
 
-        public List<WaitInfoDTO> WaitInfos
+        public List<DTO.WaitInfoDTO> WaitInfos
         {
             get { return _WaitInfos; }
             set => SetProperty(ref _WaitInfos, value);
@@ -130,6 +133,7 @@ namespace Daily.WPF.ViewModels.UCs
 
             //获得统计数据
             CallStatWait();
+            FreshWaitList();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -181,18 +185,129 @@ namespace Daily.WPF.ViewModels.UCs
                 MessageBox.Show(ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// 调用API从服务器获取所有未完成的待办事项
+        /// </summary>
+        private void FreshWaitList()
+        {
+            ApiRequest apiRequest = new ApiRequest();
+            apiRequest.Method= RestSharp.Method.GET;
+            apiRequest.Route = "Wait/GetWattings";
+            var response = _Client.Execute(apiRequest);
+            if(response != null)
+            {
+                if(response.ResultCode == 1 && response.ResultData != null)
+                {
+                    List<DTO.WaitInfoDTO>? list = JsonConvert.DeserializeObject<List<DTO.WaitInfoDTO>>(response.ResultData.ToString()!);
+                    if(list != null)
+                    {
+                        WaitInfos = list;
+                    }
+                }
+            }
+
+        }
+
+
         #endregion
 
 
         #region 添加待办事项
-        private readonly IDialogService _DialogService;
+        /// <summary>
+        /// 自定义对话服务
+        /// </summary>
+        private readonly DialogHostService _DialogService;
 
         public DelegateCommand AddWaitInfoCommand { get; }
-        private void AddWaitInfo()
+        private async void AddWaitInfo()
         {
-            _DialogService.ShowDialog("AddWaitUC");
+            DialogParameters keyValuePairs = new DialogParameters();
+            IDialogResult result = await _DialogService.ShowDialog("AddWaitUC", keyValuePairs);
+            if(result.Result == ButtonResult.OK)
+            {
+                if(result.Parameters.TryGetValue<DTO.WaitInfoDTO>("WaitInfoDTO", out DTO.WaitInfoDTO value) == true)
+                {
+                    ApiRequest apiRequest = new ApiRequest();
+                    apiRequest.Method = RestSharp.Method.POST;
+                    apiRequest.Route = "Wait/AddWait";
+                    apiRequest.Parameters = new WaitInfoDTO()
+                    {
+                        Title = value.Title,
+                        Content = value.Content,
+                        Status = value.Status
+                    };
+                    var response = _Client.Execute(apiRequest);
+                    if (response != null)
+                    {
+                        if (response.ResultCode == 1)
+                        {
+                            //刷新待办事项统计
+                            CallStatWait();
+                            FreshWaitList();
+                        }
+                        else
+                        {
+                            MessageBox.Show($"添加失败：{response.Msg}");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("添加失败：网络繁忙");
+                    }
+                }
+            }
         }
-        
+
+        #endregion
+
+        #region 修改待办状态
+        public DelegateCommand<WaitInfoDTO> ChangeWaitStatusCommand { get; }
+        private void ChangeWaitStatus(WaitInfoDTO waitInfoDTO)
+        {
+            ApiRequest request = new ApiRequest();
+            request.Method = RestSharp.Method.PUT;
+            request.Route = "Wait/UpdateStatus";
+            request.Parameters = waitInfoDTO;
+
+            var response = _Client.Execute(request);
+            if(response != null)
+            {
+                if (response.ResultCode == 1)
+                {
+                    //刷新待办事项统计
+                    CallStatWait();
+                    FreshWaitList();
+                }
+                else
+                {
+                    MessageBox.Show($"操作失败：{response.Msg}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("修改失败：网络繁忙");
+            }
+        }
+
+        public DelegateCommand<WaitInfoDTO> ChangeWaitCommand { get; }
+        public async void ChangeWait(WaitInfoDTO waitInfoDTO)
+        {
+            if (waitInfoDTO == null)
+                return;
+            DialogParameters keyValuePairs = new DialogParameters();
+            keyValuePairs.Add("WaitInfoDTO", waitInfoDTO);
+            IDialogResult result = await _DialogService.ShowDialog("EditWaitUC", keyValuePairs);
+            if(result.Result == ButtonResult.OK 
+                && result.Parameters.TryGetValue<WaitInfoDTO>("WaitInfoDTO",out WaitInfoDTO updatedWaitInfo)
+                && updatedWaitInfo != null)
+            {
+                ChangeWaitStatus(updatedWaitInfo);
+            }
+        }
+
+
         #endregion
 
     }

@@ -16,6 +16,7 @@
         <WindowChrome GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
+    <!--RootDialog唯一标识符-->
     <md:DialogHost DialogTheme="Inherit" Identifier="RootDialog">
         <!--SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"-->
 
