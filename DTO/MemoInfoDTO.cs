@@ -12,7 +12,7 @@ namespace Daily.WPF.DTO
     public class MemoInfoDTO
     {
         /// <summary>
-        /// 待办事项ID
+        /// 备忘录事项ID
         /// </summary>
         public int MemoId { get; set; }
 
@@ -27,6 +27,7 @@ namespace Daily.WPF.DTO
 
         /// <summary>
         /// 状态
+        /// 0-待办,1-已完成
         /// </summary>
         public int Status { get; set; }
 

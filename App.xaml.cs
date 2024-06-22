@@ -48,6 +48,8 @@ namespace Daily.WPF
             //Dialog
             containerRegistry.RegisterForNavigation<AddWaitUC, AddWaitUCViewModel>();
             containerRegistry.RegisterForNavigation<EditWaitUC, EditWaitUCViewModel>();
+            containerRegistry.RegisterForNavigation<AddMemoUC, AddMemoUCViewModel>();
+            containerRegistry.RegisterForNavigation<EditMemoUC, EditMemoUCViewModel>();
 
             //添加自定义的窗口注入服务
             containerRegistry.Register<DialogHostService>();

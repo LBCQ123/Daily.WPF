@@ -43,13 +43,18 @@
                 <!--第一行-->
                 <DockPanel LastChildFill="False" Margin="15">
                     <TextBox MinWidth="200" VerticalAlignment="Center" 
-                  md:HintAssist.Hint="查找待办事项..."
-                  md:TextFieldAssist.HasClearButton="True"
-                  DockPanel.Dock="Left"/>
+                        md:HintAssist.Hint="查找待办事项..."
+                        Text="{Binding QueryRule,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        md:TextFieldAssist.HasClearButton="True"
+                        DockPanel.Dock="Left">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding QueryListCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <TextBlock Text="筛选:" VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Margin="10 0 10 0"/>
-                    <ComboBox VerticalAlignment="Center" SelectedIndex="0"
+                        DockPanel.Dock="Left"
+                        Margin="10 0 10 0"/>
+                    <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding StatusSelected}"
                         DockPanel.Dock="Left">
                         <ComboBoxItem Content="全部"/>
                         <ComboBoxItem Content="待办"/>
@@ -73,7 +78,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="Green" Padding="5" MinHeight="160" Width="250" ClipToBounds="True">
+                            <Border x:Name="border" Background="#1E90FF" Padding="5" MinHeight="160" Width="250" ClipToBounds="True">
                                 <StackPanel >
                                     <DockPanel LastChildFill="False">
                                         <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
@@ -92,6 +97,11 @@
                                     </Canvas>
                                 </StackPanel>
                             </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="1">
+                                    <Setter TargetName="border" Property="Background" Value="#3CB371"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

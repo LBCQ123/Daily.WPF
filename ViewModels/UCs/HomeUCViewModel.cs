@@ -11,19 +11,26 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Data;
 
 namespace Daily.WPF.ViewModels.UCs
 {
     public class HomeUCViewModel : BindableBase, INavigationAware
     {
-        public HomeUCViewModel(HttpRestClient httpRestClient, DialogHostService dialogService)
+        public HomeUCViewModel(HttpRestClient httpRestClient,
+                                DialogHostService dialogService,
+                                IRegionManager regionManager)
         {
-            this._Client = httpRestClient;
-            this._DialogService = dialogService;
+            _Client = httpRestClient;
+            _DialogService = dialogService;
+            _RegionManager = regionManager;
 
-            AddWaitInfoCommand = new DelegateCommand(AddWaitInfo);
-            ChangeWaitStatusCommand = new DelegateCommand<WaitInfoDTO>(ChangeWaitStatus);
-            ChangeWaitCommand = new DelegateCommand<WaitInfoDTO>(ChangeWait);
+            AddWaitInfoCommand = new DelegateCommand(AddWaitInfo);//添加待办信息
+            ChangeWaitStatusCommand = new DelegateCommand<WaitInfoDTO>(ChangeWaitStatus);//更改待办信息状态
+            ChangeWaitCommand = new DelegateCommand<WaitInfoDTO>(ChangeWait);//更改待办信息
+            NavigationPageCommand = new DelegateCommand<StatePanelInfo>(NavigationPage);//导航服务
+            AddMemoCommand = new DelegateCommand(AddMemo);//添加备忘录信息
+            ChangeMemoCommand = new DelegateCommand<MemoInfoDTO> (ChangeMemo);//编辑备忘录信息
 
             _StatePanels = new List<StatePanelInfo>()
             {
@@ -45,7 +52,7 @@ namespace Daily.WPF.ViewModels.UCs
                 new MemoInfoDTO(1,"会议二","所有项目干系人都要参与，会议内容，讨论并确立项目目标",0)
             };
 
-            
+
 
         }
 
@@ -134,6 +141,8 @@ namespace Daily.WPF.ViewModels.UCs
             //获得统计数据
             CallStatWait();
             FreshWaitList();
+            FreshMemoCounts();
+            FreshMemoList();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -193,15 +202,15 @@ namespace Daily.WPF.ViewModels.UCs
         private void FreshWaitList()
         {
             ApiRequest apiRequest = new ApiRequest();
-            apiRequest.Method= RestSharp.Method.GET;
+            apiRequest.Method = RestSharp.Method.GET;
             apiRequest.Route = "Wait/GetWattings";
             var response = _Client.Execute(apiRequest);
-            if(response != null)
+            if (response != null)
             {
-                if(response.ResultCode == 1 && response.ResultData != null)
+                if (response.ResultCode == 1 && response.ResultData != null)
                 {
                     List<DTO.WaitInfoDTO>? list = JsonConvert.DeserializeObject<List<DTO.WaitInfoDTO>>(response.ResultData.ToString()!);
-                    if(list != null)
+                    if (list != null)
                     {
                         WaitInfos = list;
                     }
@@ -225,9 +234,9 @@ namespace Daily.WPF.ViewModels.UCs
         {
             DialogParameters keyValuePairs = new DialogParameters();
             IDialogResult result = await _DialogService.ShowDialog("AddWaitUC", keyValuePairs);
-            if(result.Result == ButtonResult.OK)
+            if (result.Result == ButtonResult.OK)
             {
-                if(result.Parameters.TryGetValue<DTO.WaitInfoDTO>("WaitInfoDTO", out DTO.WaitInfoDTO value) == true)
+                if (result.Parameters.TryGetValue<DTO.WaitInfoDTO>("WaitInfoDTO", out DTO.WaitInfoDTO value) == true)
                 {
                     ApiRequest apiRequest = new ApiRequest();
                     apiRequest.Method = RestSharp.Method.POST;
@@ -272,7 +281,7 @@ namespace Daily.WPF.ViewModels.UCs
             request.Parameters = waitInfoDTO;
 
             var response = _Client.Execute(request);
-            if(response != null)
+            if (response != null)
             {
                 if (response.ResultCode == 1)
                 {
@@ -299,8 +308,8 @@ namespace Daily.WPF.ViewModels.UCs
             DialogParameters keyValuePairs = new DialogParameters();
             keyValuePairs.Add("WaitInfoDTO", waitInfoDTO);
             IDialogResult result = await _DialogService.ShowDialog("EditWaitUC", keyValuePairs);
-            if(result.Result == ButtonResult.OK 
-                && result.Parameters.TryGetValue<WaitInfoDTO>("WaitInfoDTO",out WaitInfoDTO updatedWaitInfo)
+            if (result.Result == ButtonResult.OK
+                && result.Parameters.TryGetValue<WaitInfoDTO>("WaitInfoDTO", out WaitInfoDTO updatedWaitInfo)
                 && updatedWaitInfo != null)
             {
                 ChangeWaitStatus(updatedWaitInfo);
@@ -308,6 +317,165 @@ namespace Daily.WPF.ViewModels.UCs
         }
 
 
+        #endregion
+
+
+        #region 页面导航
+        /// <summary>
+        /// 导航服务
+        /// </summary>
+        private readonly IRegionManager _RegionManager;
+
+        public DelegateCommand<StatePanelInfo> NavigationPageCommand { get; }
+        private void NavigationPage(StatePanelInfo statePanelInfo)
+        {
+            NavigationParameters parameters = new NavigationParameters();
+            if (statePanelInfo.ItemName == "已完成")
+            {
+                //传递已完成参数
+                parameters.Add("StatusIndex", 2);
+            }
+
+            if (string.IsNullOrEmpty(statePanelInfo.ViewName) == false)
+            {
+                _RegionManager.Regions["MainViewRegion"].RequestNavigate(statePanelInfo.ViewName, parameters);
+            }
+        }
+
+
+        #endregion
+
+
+
+        #region 刷新备忘录信息
+
+        private void FreshMemoCounts()
+        {
+            ApiRequest apiRequest = new ApiRequest();
+            apiRequest.Route = "Memo/GetMemoInfo";
+            apiRequest.Method = RestSharp.Method.GET;
+            var response = _Client.Execute(apiRequest);
+            if (response != null)
+            {
+                if (response.ResultCode == 1 && response.ResultData != null)
+                {
+                    StatePanels[3].Result = response.ResultData.ToString()!;
+                }
+                else
+                {
+                    MessageBox.Show($"FreshMemoCounts Error[{response.ResultCode}]:" + response.Msg);
+                }
+
+            } else
+            {
+                MessageBox.Show("服务器繁忙，请稍后再试");
+            }
+        }
+
+        /// <summary>
+        /// 刷新MemoList
+        /// </summary>
+        private void FreshMemoList()
+        {
+            ApiRequest apiRequest = new ApiRequest();
+            apiRequest.Route = "Memo/GetMemoList?rule=&status=0";
+            apiRequest.Method = RestSharp.Method.GET;
+            var response = _Client.Execute(apiRequest);
+            if (response != null)
+            {
+                if (response.ResultCode == 1 && response.ResultData != null)
+                {
+                    var list = JsonConvert.DeserializeObject<List<MemoInfoDTO>>(response.ResultData.ToString()!);
+                    if (list != null)
+                    {
+                        MemoInfos = list;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"FreshMemoList Error[{response.ResultCode}]:" + response.Msg);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("服务器繁忙，请稍后再试");
+            }
+        }
+
+        #endregion
+
+        #region 添加一条备忘录信息
+        public DelegateCommand AddMemoCommand { get; }
+        private async void AddMemo()
+        {
+            IDialogResult result = await _DialogService.ShowDialog("AddMemoUC",new DialogParameters());
+            if(result.Result == ButtonResult.OK && result.Parameters.TryGetValue<MemoInfoDTO>
+                        ("MemoInfoDTO",out MemoInfoDTO memoInfo))
+            {
+                ApiRequest request = new ApiRequest();
+                request.Route = "Memo/AddMemo";
+                request.Method= RestSharp.Method.POST;
+                request.Parameters = memoInfo;
+                var response = _Client.Execute(request);
+                if (response != null)
+                {
+                    if (response.ResultCode == 1 )
+                    {
+                        FreshMemoCounts();
+                        FreshMemoList();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"AddMemo Error[{response.ResultCode}]:" + response.Msg);
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("服务器繁忙，请稍后再试");
+                }
+            }
+        }
+        #endregion
+
+        #region 修改待办事项
+
+        public DelegateCommand<MemoInfoDTO> ChangeMemoCommand { get; }
+        private async void ChangeMemo(MemoInfoDTO memoInfo) 
+        {
+            if (memoInfo == null)
+                return;
+            DialogParameters paramers = new DialogParameters();
+            paramers.Add("MemoInfoDTO", memoInfo);
+            var result = await _DialogService.ShowDialog("EditMemoUC", paramers);
+            if(result.Result == ButtonResult.OK && result.Parameters.TryGetValue<MemoInfoDTO>("MemoInfoDTO",out MemoInfoDTO changeMemo))
+            {
+                ApiRequest request = new ApiRequest();
+                request.Route = "Memo/ChangeMemo";
+                request.Method = RestSharp.Method.PUT;
+                request.Parameters = changeMemo;
+                var response = _Client.Execute(request);
+                if (response != null)
+                {
+                    if (response.ResultCode == 1)
+                    {
+                        FreshMemoCounts();
+                        FreshMemoList();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"ChangeMemo Error[{response.ResultCode}]:" + response.Msg);
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("服务器繁忙，请稍后再试");
+                }
+            }
+        
+        }
         #endregion
 
     }

@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Daily.WPF.Views.Dialogs.EditMemoUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Daily.WPF.Views.Dialogs"
+             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
+             FontFamily="微软雅黑"
+             Height="300" Width="500">
+
+
+    <DockPanel Margin="10" TextBlock.FontSize="20">
+        <TextBlock Text="编辑备忘录"  FontSize="30" FontWeight="Bold" DockPanel.Dock="Top"/>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <TextBlock Text="状态:" VerticalAlignment="Center"/>
+            <ComboBox SelectedIndex="{Binding MemoInfoDTO.Status}">
+                <ComboBoxItem Content="待办"/>
+                <ComboBoxItem Content="已完成"/>
+            </ComboBox>
+        </StackPanel>
+        <TextBox md:HintAssist.Hint="请输入备忘录的概要" Text="{Binding MemoInfoDTO.Title}" DockPanel.Dock="Top"/>
+
+        <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" Margin="0 5 0 0">
+            <Button Content="确认" DockPanel.Dock="Right" Command="{Binding SaveCommand}" Margin="10 0 10 0"/>
+            <Button Content="取消" DockPanel.Dock="Right" Command="{Binding CancelCommand}"/>
+        </DockPanel>
+
+        <TextBox md:HintAssist.Hint="请输入备忘录的内容" 
+                 AcceptsReturn="True"
+                 Text="{Binding MemoInfoDTO.Content}"
+                 DockPanel.Dock="Top"/>
+    </DockPanel>
+</UserControl>
