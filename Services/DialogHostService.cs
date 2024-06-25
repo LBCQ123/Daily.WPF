@@ -51,7 +51,7 @@ namespace Daily.WPF.Services
             if (dialogContent.DataContext is IDialogHostAware viewModel)
             {
                 //传入主机名
-                viewModel.DailogHostName = dialogHostName;
+                viewModel.DialogHostName = dialogHostName;
             }
             else
             {

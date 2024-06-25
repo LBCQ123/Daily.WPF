@@ -32,6 +32,6 @@ namespace Daily.WPF.Services
         /// <summary>
         /// 要被注入的主机名
         /// </summary>
-        string DailogHostName { get;set; }
+        string DialogHostName { get;set; }
     }
 }

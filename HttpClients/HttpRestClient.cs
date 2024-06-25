@@ -17,7 +17,8 @@ namespace Daily.WPF.HttpClients
     {
         private readonly RestClient _client;//客户端
 
-        private readonly string baseUrl = "http://localhost:42957/api/";
+        //private readonly string baseUrl = "http://localhost:42957/api/";
+        private readonly string baseUrl = "http://192.168.178.143/api/";
 
         public HttpRestClient()
         {
@@ -55,7 +56,7 @@ namespace Daily.WPF.HttpClients
                 else
                 {
                     response.ResultCode = -99;
-                    response.Msg = restResponse.ErrorMessage;
+                    response.Msg = "访问错误:" + restResponse.ErrorMessage;
                 }
             }
             catch(Exception ex)

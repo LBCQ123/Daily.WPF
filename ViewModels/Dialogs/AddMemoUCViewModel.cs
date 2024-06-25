@@ -43,7 +43,7 @@ namespace Daily.WPF.ViewModels.Dialogs
         /// <summary>
         /// 要被注入的主机名
         /// </summary>
-        public string DailogHostName { get; set; } = string.Empty;
+        public string DialogHostName { get; set; } = string.Empty;
 
         private void Save()
         {
@@ -54,19 +54,19 @@ namespace Daily.WPF.ViewModels.Dialogs
                 return;
             }
             
-            if (DialogHost.IsDialogOpen(DailogHostName))
+            if (DialogHost.IsDialogOpen(DialogHostName))
             {
                 IDialogResult para = new DialogResult(ButtonResult.OK);
                 para.Parameters.Add("MemoInfoDTO", MemoInfoDTO);
-                DialogHost.Close(DailogHostName, para);
+                DialogHost.Close(DialogHostName, para);
             }
         }
 
         private void Cancel()
         {
-            if (DialogHost.IsDialogOpen(DailogHostName))
+            if (DialogHost.IsDialogOpen(DialogHostName))
             {
-                DialogHost.Close(DailogHostName, new DialogResult(ButtonResult.No));
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
             }
         }
 
@@ -78,8 +78,6 @@ namespace Daily.WPF.ViewModels.Dialogs
         {
             
         }
-
-
 
     }
 }
